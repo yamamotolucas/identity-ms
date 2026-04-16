@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class UserEntity {
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,5 +76,22 @@ public class UserEntity {
 
     public void setCreationDate(LocalDateTime creationDate) {this.creationDate = creationDate;}
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name()));}
+
+    @Override
+    public boolean isEnabled() {return this.isActive;}
+
+    @Override
+    public String getUsername() {return this.email;}
+
+    @Override
+    public boolean isCredentialsNonExpired() {return true;}
+
+    @Override
+    public boolean isAccountNonLocked() {return true;}
+
+    @Override
+    public boolean isAccountNonExpired() {return true;}
 
 }
