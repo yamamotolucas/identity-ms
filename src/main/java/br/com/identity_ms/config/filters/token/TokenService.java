@@ -33,6 +33,7 @@ public class TokenService {
                     .withSubject(user.getUsername())
                     .withClaim("roles", roles)
                     .withClaim("id", user.getId())
+                    .withClaim("name", user.getName())
                     .withExpiresAt(generateExpirationTime())
                     .sign(algorithm);
         } catch (JWTCreationException exception) {
