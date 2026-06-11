@@ -9,18 +9,18 @@ import br.com.identity_ms.model.user.UserEntity;
 import br.com.identity_ms.model.user.UserRole;
 import br.com.identity_ms.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/auth")
@@ -40,13 +40,7 @@ public class AuthController {
     public ResponseEntity<CreateUserOutput> register(@RequestBody @Valid CreateUserInput input) {
 
         CreateUserOutput output = userService.create(input, UserRole.CUSTOMER);
-
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .build(output);
-
-        return ResponseEntity.created(uri).body(output);
+        return ResponseEntity.ok().body(output);
     }
 
     @PostMapping("/login")
@@ -64,4 +58,14 @@ public class AuthController {
         }
     }
 
+    @GetMapping("/validate")
+    public ResponseEntity<Map<String, String>> validate(@RequestParam String token) {
+        String tokenResponse = tokenService.decodeToken(token);
+        if (tokenResponse == null || tokenResponse.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Token expired or invalid"));
+        }
+
+        return ResponseEntity.ok(Map.of("result", "valid"));
+    }
 }
