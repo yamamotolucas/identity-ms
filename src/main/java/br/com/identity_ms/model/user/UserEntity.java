@@ -1,5 +1,6 @@
 package br.com.identity_ms.model.user;
 
+import br.com.identity_ms.model.barber.BarberEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,6 +40,16 @@ public class UserEntity implements UserDetails {
     @Column(name = "creation_date", updatable = false, nullable = false)
     private LocalDateTime creationDate;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private BarberEntity barber;
+
+    public void setBarber(BarberEntity barber) {
+        this.barber = barber;
+        if (barber != null) {
+            barber.setUser(this);
+        }
+    }
+
     public UserEntity() {}
 
     public UserEntity(String name, String email, String password, UserRole role) {
@@ -75,6 +86,8 @@ public class UserEntity implements UserDetails {
     public LocalDateTime getCreationDate() {return creationDate;}
 
     public void setCreationDate(LocalDateTime creationDate) {this.creationDate = creationDate;}
+
+    public BarberEntity getBarber() {return barber;}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name()));}
