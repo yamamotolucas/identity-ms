@@ -15,8 +15,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/auth")
@@ -46,8 +50,10 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(input.email(), input.password())
             );
 
-            String token = tokenService.generateToken((UserEntity) authentication.getPrincipal());
-            return ResponseEntity.ok(new TokenOutput(token));
+            UserEntity user = (UserEntity) authentication.getPrincipal();
+
+            String token = tokenService.generateToken(user);
+            return ResponseEntity.ok(new TokenOutput(token, user.getRole()));
 
         } catch (AuthenticationException e) {
             throw new RuntimeException("Invalid username or password.");
