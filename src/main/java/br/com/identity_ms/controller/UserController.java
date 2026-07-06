@@ -2,13 +2,11 @@ package br.com.identity_ms.controller;
 
 import br.com.identity_ms.dto.input.AdminCreateUserInput;
 import br.com.identity_ms.dto.output.CreateUserOutput;
+import br.com.identity_ms.dto.output.UserBaseOutput;
 import br.com.identity_ms.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -36,6 +34,11 @@ public class UserController {
         return ResponseEntity.created(uri).body(output);
     }
 
-
-
+    @GetMapping("/me")
+    public ResponseEntity<UserBaseOutput> getMe(
+            @RequestHeader("X-User-Name") String name,
+            @RequestHeader("X-User-Email") String email
+    ) {
+        return ResponseEntity.ok().body(new UserBaseOutput(name, email));
+    }
 }
