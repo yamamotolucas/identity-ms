@@ -28,4 +28,12 @@ public class BarberController {
     public ResponseEntity<String> getBarberNameById(@PathVariable Long id) {
         return ResponseEntity.ok(barberService.getBarberNameById(id));
     }
+
+    @PatchMapping("/update")
+    public ResponseEntity<BarberBaseOutput> update(
+            @Valid @RequestBody BarberUpdateInput dto,
+            @RequestHeader("X-User-Id") String barberId
+    ) {
+        return ResponseEntity.ok(barberService.update(dto, barberId));
+    }
 }

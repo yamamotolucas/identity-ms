@@ -1,9 +1,11 @@
 package br.com.identity_ms.service;
 
+import br.com.identity_ms.dto.input.BarberUpdateInput;
 import br.com.identity_ms.dto.output.BarberBaseOutput;
 import br.com.identity_ms.model.barber.BarberEntity;
 import br.com.identity_ms.repository.BarberRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,5 +29,17 @@ public class BarberService {
                 .orElseThrow(() -> new EntityNotFoundException("Barber not found with provided id"));
 
         return barberEntity.getUser().getName();
+    }
+
+    @Transactional
+    public BarberBaseOutput update(BarberUpdateInput input, String barberId) {
+        BarberEntity savedBarber = barberRepository.findByUserId(Long.parseLong(barberId))
+                .orElseThrow(() -> new EntityNotFoundException("Barber not found with provided id"));
+
+        if(input.specialty() != null) savedBarber.setSpecialty(input.specialty());
+        if(input.avatar() != null) savedBarber.setAvatar(input.avatar());
+
+        BarberEntity updatedBarber = barberRepository.save(savedBarber);
+        return new BarberBaseOutput(updatedBarber.getUser());
     }
 }
