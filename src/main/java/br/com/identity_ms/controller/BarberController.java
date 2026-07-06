@@ -1,12 +1,11 @@
 package br.com.identity_ms.controller;
 
 import br.com.identity_ms.dto.output.BarberBaseOutput;
+import br.com.identity_ms.dto.input.BarberUpdateInput;
 import br.com.identity_ms.service.BarberService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,12 +19,12 @@ public class BarberController {
         this.barberService = barberService;
     }
 
-    @GetMapping
+    @GetMapping("/findAll")
     public ResponseEntity<List<BarberBaseOutput>> findAll() {
         return ResponseEntity.ok(barberService.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("findById/{id}")
     public ResponseEntity<String> getBarberNameById(@PathVariable Long id) {
         return ResponseEntity.ok(barberService.getBarberNameById(id));
     }
