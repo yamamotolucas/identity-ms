@@ -1,6 +1,7 @@
 package br.com.identity_ms.controller;
 
 import br.com.identity_ms.dto.input.AdminCreateUserInput;
+import br.com.identity_ms.dto.input.UserUpdateInput;
 import br.com.identity_ms.dto.output.CreateUserOutput;
 import br.com.identity_ms.dto.output.UserBaseOutput;
 import br.com.identity_ms.service.UserService;
@@ -40,5 +41,10 @@ public class UserController {
             @RequestHeader("X-User-Email") String email
     ) {
         return ResponseEntity.ok().body(new UserBaseOutput(name, email));
+    }
+
+    @PatchMapping("/update")
+    public ResponseEntity<UserBaseOutput> update(@RequestBody UserUpdateInput input, @RequestHeader("X-User-Id") String userId) {
+        return ResponseEntity.ok(userService.update(input, userId));
     }
 }
