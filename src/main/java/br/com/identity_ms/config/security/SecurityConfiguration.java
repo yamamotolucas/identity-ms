@@ -58,6 +58,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/v1/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/v1/barber/findAll").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/barber/findById/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v1/barber/me").hasRole("BARBER")
                         .requestMatchers(HttpMethod.PATCH, "/v1/barber/*").hasRole("BARBER")
                         .requestMatchers(HttpMethod.GET, "/v1/users/me").hasAnyRole("ADMIN", "CUSTOMER", "BARBER")
                         .requestMatchers(HttpMethod.PATCH, "/v1/users/update").hasAnyRole("ADMIN", "CUSTOMER", "BARBER")

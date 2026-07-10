@@ -36,4 +36,11 @@ public class BarberController {
     ) {
         return ResponseEntity.ok(barberService.update(dto, barberId));
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<BarberBaseOutput> getBarberById(
+            @RequestHeader("X-User-Id") String barberId
+    ) {
+        return ResponseEntity.ok(barberService.getBarberById(barberId));
+    }
 }

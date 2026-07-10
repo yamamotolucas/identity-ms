@@ -42,4 +42,11 @@ public class BarberService {
         BarberEntity updatedBarber = barberRepository.save(savedBarber);
         return new BarberBaseOutput(updatedBarber.getUser());
     }
+
+    public BarberBaseOutput getBarberById(String barberId) {
+        BarberEntity barber = barberRepository.findByUserId(Long.parseLong(barberId))
+                .orElseThrow(() -> new EntityNotFoundException("Barber not found with provided id"));
+
+        return new BarberBaseOutput(barber.getUser());
+    }
 }
