@@ -59,6 +59,11 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/login/github").permitAll()
                         .requestMatchers(HttpMethod.GET, "/login/github/authorized").permitAll()
 
+
+                        //AUTH GOOGLE
+                        .requestMatchers(HttpMethod.GET, "/login/google").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/login/google/authorized").permitAll()
+
                         //USER
                         .requestMatchers(HttpMethod.POST, "/v1/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/v1/barber/findAll").permitAll()
