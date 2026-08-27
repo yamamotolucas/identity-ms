@@ -4,6 +4,7 @@ import br.com.identity_ms.dto.output.BarberBaseOutput;
 import br.com.identity_ms.dto.input.BarberUpdateInput;
 import br.com.identity_ms.service.BarberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -42,20 +43,22 @@ public class BarberController {
         return ResponseEntity.ok(barberService.getBarberNameById(id));
     }
 
-    @Operation(summary = "Update barber profile", description = "Updates profile details for the authenticated barber identified by header.")
+    @Operation(summary = "Update barber profile", description = "Updates profile details for the authenticated barber identified by header. **Required role:** `BARBER`")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Barber profile updated successfully"), @ApiResponse(responseCode = "400", description = "Invalid payload", content = @Content), @ApiResponse(responseCode = "404", description = "Barber not found", content = @Content)})
     @PatchMapping("/update")
     public ResponseEntity<BarberBaseOutput> update(
             @Valid @RequestBody BarberUpdateInput dto,
+            @Parameter(hidden = true)
             @RequestHeader("X-User-Id") String barberId
     ) {
         return ResponseEntity.ok(barberService.update(dto, barberId));
     }
 
-    @Operation(summary = "Get current barber profile", description = "Retrieves the profile details of the authenticated barber from the header ID.")
+    @Operation(summary = "Get current barber profile", description = "Retrieves the profile details of the authenticated barber from the header ID. **Required role:** `BARBER`")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Barber profile retrieved successfully"), @ApiResponse(responseCode = "404", description = "Barber not found", content = @Content)})
     @GetMapping("/me")
     public ResponseEntity<BarberBaseOutput> getBarberById(
+            @Parameter(hidden = true)
             @RequestHeader("X-User-Id") String barberId
     ) {
         return ResponseEntity.ok(barberService.getBarberById(barberId));
