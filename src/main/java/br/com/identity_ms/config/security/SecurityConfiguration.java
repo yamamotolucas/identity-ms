@@ -55,14 +55,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/v1/auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/auth/validate").permitAll()
 
-                        //AUTH GITHUB
-                        .requestMatchers(HttpMethod.GET, "/login/github").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/login/github/authorized").permitAll()
-
-
-                        //AUTH GOOGLE
-                        .requestMatchers(HttpMethod.GET, "/login/google").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/login/google/authorized").permitAll()
+                        //OAUTH2
+                        .requestMatchers(HttpMethod.GET, "/v1/auth/oauth2/**").permitAll()
 
                         //USER
                         .requestMatchers(HttpMethod.POST, "/v1/users").hasRole("ADMIN")

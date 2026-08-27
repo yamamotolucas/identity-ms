@@ -3,6 +3,7 @@ package br.com.identity_ms.service;
 import br.com.identity_ms.dto.input.UserCreateContract;
 import br.com.identity_ms.dto.input.UserUpdateInput;
 import br.com.identity_ms.dto.output.CreateUserOutput;
+import br.com.identity_ms.dto.output.OAuth2UserData;
 import br.com.identity_ms.dto.output.UserBaseOutput;
 import br.com.identity_ms.model.barber.BarberEntity;
 import br.com.identity_ms.model.user.UserEntity;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -45,7 +47,24 @@ public class UserService {
         }
 
         return new CreateUserOutput(userRepository.save(user));
+    }
 
+    @Transactional
+    public UserEntity findOrCreateSocialUser(OAuth2UserData userData) {
+        return userRepository.findByEmail(userData.email())
+                .orElseGet(() -> {
+                    String randomPassword = UUID.randomUUID().toString();
+                    String hashedPassword = passwordEncoder.encode(randomPassword);
+
+                    UserEntity newUser = new UserEntity(
+                            userData.name(),
+                            userData.email(),
+                            hashedPassword,
+                            UserRole.CUSTOMER
+                    );
+
+                    return userRepository.save(newUser);
+                });
     }
 
     @Transactional
